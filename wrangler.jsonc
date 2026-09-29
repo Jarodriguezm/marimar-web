@@ -1,0 +1,11 @@
+{
+  // Debe coincidir EXACTO con el nombre del Worker en Cloudflare
+  "name": "marimargroup",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./public",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  }
+  // Sin "routes": los dominios se siguen manejando desde el panel y no se tocan
+}
