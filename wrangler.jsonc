@@ -2,6 +2,9 @@
   // Debe coincidir EXACTO con el nombre del Worker en Cloudflare
   "name": "marimargroup",
   "compatibility_date": "2026-09-01",
+  // Mantiene la URL workers.dev y habilita las URLs de prueba por versión
+  "workers_dev": true,
+  "preview_urls": true,
   "assets": {
     "directory": "./public",
     "html_handling": "auto-trailing-slash",
