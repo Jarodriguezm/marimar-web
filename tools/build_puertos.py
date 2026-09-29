@@ -3,6 +3,7 @@ Uso: python3 tools/build_puertos.py   (desde la raíz del repo)"""
 import json, os, html
 from urllib.parse import quote
 from puertos_data import PORTS
+from survey_data import SURVEY, SPORTS
 
 DIRECT = {'puerto-sucre'}  # jurisdicción propia de MARIMAR; el resto, vía agencias aliadas
 PARTNER = {
@@ -53,7 +54,7 @@ UI = {
  'es': dict(dir='/puertos/', home='/', other='en', hub='Puertos', hub_title='Agente naviero en el oriente de Venezuela: puertos que atendemos | MARIMAR C.A.',
    hub_desc='MARIMAR C.A. opera en Puerto Sucre (Cumaná) y presta atención al buque y coordinación de escalas en Güiria, Carúpano, Guanta, Puerto La Cruz, Jose y Margarita. Agencia naviera y aduanal desde 1992.',
    hub_h1='Puertos que atendemos en el oriente de Venezuela', hub_lead='Operamos directamente en Puerto Sucre (Cumaná), nuestra sede desde 1992, y en los demás puertos del oriente venezolano prestamos atención al buque (husbandry) y coordinación integral junto a agencias locales habilitadas. En todos los casos, MARIMAR es su punto único de contacto. Elija el puerto para ver los servicios y solicitar su proforma de gastos (PDA).',
-   kicker='Agencia naviera · Oriente de Venezuela', nav=[('/#servicios','Servicios'),('/puertos/','Puertos'),('/#nosotros','Nosotros'),('/#contacto','Contacto')],
+   kicker='Agencia naviera · Oriente de Venezuela', nav=[('/#servicios','Servicios'),('/puertos/','Puertos'),('/servicios/survey/','Survey'),('/#nosotros','Nosotros'),('/#contacto','Contacto')],
    cta_wa='Solicitar PDA por WhatsApp', cta_mail='Escribir a agencia', req='Solicitar servicios', f_loc='Ubicación', f_base='Modalidad', f_base_v='Directa · sede MARIMAR', f_partner='Atención al buque + agencia local', f_since='Experiencia', f_since_v='Desde 1992', f_pos='Posición',
    about='Sobre el puerto', svc='Servicios en', svc_p='Servicios que coordinamos en', how='Cómo trabajamos', steps=[('Envíe los datos de la escala','Nombre del buque, ETA, operación prevista y servicios requeridos.'),('Reciba su PDA','Le enviamos la proforma de gastos para que apruebe la escala con costos claros.'),('Coordinamos la escala','Nos encargamos de autoridades, terminal, proveedores y tripulación hasta el zarpe.')], steps3_p=('Coordinamos la escala','Con la agencia local habilitada coordinamos terminal, proveedores y tripulación, y le informamos hasta el zarpe.'),
    faq='Preguntas frecuentes', others='Otros puertos que atendemos', band_t='¿Tiene un buque rumbo a', band_p='Envíenos la ETA y los servicios que necesita. Le respondemos con la PDA.', view='Ver puerto',
@@ -62,7 +63,7 @@ UI = {
  'en': dict(dir='/en/ports/', home='/en/', other='es', hub='Ports', hub_title='Ship Agent in Eastern Venezuela: Ports We Cover | MARIMAR C.A.',
    hub_desc='MARIMAR C.A. operates at Puerto Sucre (Cumaná) and provides husbandry and call coordination at Güiria, Carúpano, Guanta, Puerto La Cruz, Jose and Margarita, Venezuela. Port agency since 1992.',
    hub_h1='Ports we cover in eastern Venezuela', hub_lead='We operate directly at Puerto Sucre (Cumaná), our home port since 1992, and at the other ports of eastern Venezuela we provide husbandry and full coordination alongside licensed local agencies. Either way, MARIMAR is your single point of contact. Choose a port to see services and request your proforma disbursement account (PDA).',
-   kicker='Port agency · Eastern Venezuela', nav=[('/en/#servicios','Services'),('/en/ports/','Ports'),('/en/#nosotros','About'),('/en/#contacto','Contact')],
+   kicker='Port agency · Eastern Venezuela', nav=[('/en/#servicios','Services'),('/en/ports/','Ports'),('/en/services/marine-survey/','Survey'),('/en/#nosotros','About'),('/en/#contacto','Contact')],
    cta_wa='Request PDA via WhatsApp', cta_mail='Email the agency', req='Request services', f_loc='Location', f_base='Service model', f_base_v='Direct · MARIMAR base', f_partner='Husbandry + local agency', f_since='Experience', f_since_v='Since 1992', f_pos='Position',
    about='About the port', svc='Services in', svc_p='Services we coordinate in', how='How we work', steps=[('Send the call details','Vessel name, ETA, planned operation and services required.'),('Receive your PDA','We send the proforma disbursement account so you can approve the call with clear costs.'),('We run the call','We handle authorities, terminal, suppliers and crew until departure.')], steps3_p=('We run the call','With the licensed local agency we coordinate terminal, suppliers and crew, and keep you informed until departure.'),
    faq='Frequently asked questions', others='Other ports we cover', band_t='Vessel heading to', band_p='Send us the ETA and the services you need. We reply with the PDA.', view='View port',
@@ -80,7 +81,7 @@ def head(lang, title, desc, path, alt_path, ld):
     u = UI[lang]
     es_p, en_p = (path, alt_path) if lang == 'es' else (alt_path, path)
     cur = ' aria-current="page"'
-    nav_html = ''.join(f'<a href="{h}"' + (cur if h == u['dir'] else '') + f'>{l}</a>' for h, l in u['nav'])
+    nav_html = ''.join(f'<a href="{h}"' + (cur if '#' not in h and path.startswith(h) else '') + f'>{l}</a>' for h, l in u['nav'])
     return f'''<!DOCTYPE html>
 <html lang="{lang}">
 <head>
@@ -119,7 +120,7 @@ def head(lang, title, desc, path, alt_path, ld):
 
 def foot(lang):
     u = UI[lang]
-    links = ''.join(f'<a href="{url(lang, p["slug"])}">{e(p[lang]["name"])}</a>' for p in PORTS) + f'<a href="{PROT[lang]["path"]}">{PROT[lang]["crumb"]}</a>'
+    links = ''.join(f'<a href="{url(lang, p["slug"])}">{e(p[lang]["name"])}</a>' for p in PORTS) + f'<a href="{PROT[lang]["path"]}">{PROT[lang]["crumb"]}</a>' + f'<a href="{SURVEY[lang]["path"]}">{SURVEY[lang]["crumb"]}</a>'
     return f'''</main>
 <footer class="ft"><div class="wrap">
   <div><strong style="color:#fff">MARIMAR C.A.</strong><br>{u['foot']}<br><a href="tel:+584121859530">+58 412-185.95.30</a> · <a href="mailto:{MAIL}">{MAIL}</a></div>
@@ -254,6 +255,92 @@ def prot_band(lang):
     d = PROT[lang]
     return f'<section class="band"><div class="wrap"><div><h2>{d["link_t"]}</h2><p>{d["link_p"]}</p></div><div class="ctas"><a class="btn btn-light" href="{d["path"]}">{d["link_b"]} →</a></div></div></section>\n'
 
+def sp_url(lang, slug):
+    return SURVEY[lang]['path'] + slug + '/'
+
+def survey_cards(lang, exclude=None):
+    u, S = UI[lang], SURVEY[lang]
+    out = []
+    for sp in SPORTS:
+        if sp['slug'] == exclude: continue
+        d = sp[lang]
+        out.append(f'<a class="card" href="{sp_url(lang, sp["slug"])}"><h3>{e(d["name"])}</h3><span>{e(d["region"])}</span><span class="more">{S["survey_in"]} {e(d["name"])} →</span></a>')
+    for p in PORTS:
+        d = p[lang]
+        out.append(f'<a class="card" href="{url(lang, p["slug"])}"><h3>{e(d["name"])}</h3><span>{e(p["region_es"] if lang=="es" else p["region_en"])}</span><span class="more">{S["view"]} →</span></a>')
+    return ''.join(out)
+
+def survey_common(lang):
+    S = SURVEY[lang]
+    return (f'<section class="blk alt"><div class="wrap"><h2>{S["svc_t"]}</h2><div class="cards">' +
+            ''.join(f'<div class="card" style="cursor:default"><h3>{e(t)}</h3><p style="margin-top:8px;font-size:15px">{e(x)}</p></div>' for t, x in S['services']) +
+            f'</div></div></section>\n<section class="blk"><div class="wrap"><h2>{S["how_t"]}</h2><div class="steps">' +
+            ''.join(f'<div class="step"><h3>{e(t)}</h3><p>{e(x)}</p></div>' for t, x in S['steps']) + '</div></div></section>\n')
+
+def survey_hub(lang):
+    u, S = UI[lang], SURVEY[lang]; other = u['other']
+    path, alt = S['path'], SURVEY[other]['path']; link = wa(S['wa'])
+    ld = {"@context": "https://schema.org", "@graph": [
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": u['home_l'], "item": BASE + u['home']},
+            {"@type": "ListItem", "position": 2, "name": S['crumb'], "item": BASE + path}]},
+        {"@type": "Service", "name": S['h1'], "serviceType": "Marine survey", "description": S['desc'], "areaServed": {"@type": "Country", "name": "Venezuela"},
+         "provider": {"@type": "LocalBusiness", "@id": BASE + "/#org", "name": "MARIMAR C.A.", "url": BASE + "/"}, "url": BASE + path},
+        {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in S['faq']]}]}
+    body = f"""<section class="hero"><div class="wrap">
+  <p class="crumbs"><a href="{u['home']}">{u['home_l']}</a> › {S['crumb']}</p>
+  <p class="kicker">{S['kicker']}</p>
+  <h1>{e(S['h1'])}</h1>
+  <p class="lead">{e(S['lead'])}</p>
+  <div class="ctas"><a class="btn btn-wa" href="{link}" target="_blank" rel="noopener">{S['cta']}</a><a class="btn btn-ghost" href="mailto:operacion@marimargroup.com?subject={quote(S['crumb'])}">operacion@marimargroup.com</a></div>
+</div></section>
+""" + survey_common(lang) + f"""<section class="blk alt"><div class="wrap"><h2>{S['why_t']}</h2><div class="steps">{''.join(f'<div class="step"><h3>{e(t)}</h3><p>{e(x)}</p></div>' for t, x in S['why'])}</div></div></section>
+<section class="blk"><div class="wrap"><h2>{S['ports_t']}</h2><p style="max-width:760px;margin-bottom:22px">{e(S['ports_lead'])}</p><div class="cards">{survey_cards(lang)}</div></div></section>
+<section class="blk alt"><div class="wrap"><h2>{u['faq']}</h2>{''.join(f'<details><summary>{e(q)}</summary><p>{e(a)}</p></details>' for q, a in S['faq'])}</div></section>
+<section class="band"><div class="wrap"><div><h2>{S['cta']}</h2></div><div class="ctas"><a class="btn btn-wa" href="{link}" target="_blank" rel="noopener">WhatsApp</a><a class="btn btn-light" href="mailto:operacion@marimargroup.com">operacion@marimargroup.com</a></div></div></section>
+"""
+    return head(lang, S['title'], S['desc'], path, alt, ld) + body + foot(lang)
+
+def survey_port(lang, sp):
+    u, S, d = UI[lang], SURVEY[lang], sp[lang]; other = u['other']
+    path, alt = sp_url(lang, sp['slug']), sp_url(other, sp['slug'])
+    link = wa(S['wa'].replace('Puerto: …', 'Puerto: ' + d['name']).replace('Port: …', 'Port: ' + d['name']))
+    faq = d['faq'] + S['faq'][1:3]
+    ld = {"@context": "https://schema.org", "@graph": [
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": u['home_l'], "item": BASE + u['home']},
+            {"@type": "ListItem", "position": 2, "name": S['crumb'], "item": BASE + S['path']},
+            {"@type": "ListItem", "position": 3, "name": d['name'], "item": BASE + path}]},
+        {"@type": "Service", "name": d['h1'], "serviceType": "Marine survey", "description": d['desc'],
+         "provider": {"@type": "LocalBusiness", "@id": BASE + "/#org", "name": "MARIMAR C.A.", "url": BASE + "/"},
+         "areaServed": {"@type": "Place", "name": d['name'], "geo": {"@type": "GeoCoordinates", "latitude": sp['lat'], "longitude": sp['lon']}}, "url": BASE + path},
+        {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}]}
+    lbl = ('Servicio', 'Survey independiente', 'Cobertura', 'Toda Venezuela') if lang == 'es' else ('Service', 'Independent survey', 'Coverage', 'All of Venezuela')
+    about_h = 'Sobre el puerto' if lang == 'es' else 'About the port'
+    focus_h = ('Inspecciones frecuentes en ' if lang == 'es' else 'Common surveys at ') + d['name']
+    body = f"""<section class="hero"><div class="wrap">
+  <p class="crumbs"><a href="{u['home']}">{u['home_l']}</a> › <a href="{S['path']}">{S['crumb']}</a> › {e(d['name'])}</p>
+  <p class="kicker">{S['kicker']}</p>
+  <h1>{e(d['h1'])}</h1>
+  <p class="lead">{e(S['lead'])}</p>
+  <div class="ctas"><a class="btn btn-wa" href="{link}" target="_blank" rel="noopener">{S['cta']}</a><a class="btn btn-ghost" href="mailto:operacion@marimargroup.com?subject={quote('Survey – ' + d['name'])}">operacion@marimargroup.com</a></div>
+</div></section>
+<section class="facts"><dl class="wrap">
+  <div><dt>{u['f_loc']}</dt><dd>{e(d['region'])}</dd></div>
+  <div><dt>{lbl[0]}</dt><dd>{lbl[1]}</dd></div>
+  <div><dt>{lbl[2]}</dt><dd>{lbl[3]}</dd></div>
+  <div><dt>{u['f_pos']}</dt><dd>{u['coords'].format(sp['lat'], abs(sp['lon']))}</dd></div>
+</dl></section>
+<section class="blk"><div class="wrap grid2">
+  <div><h2>{about_h}</h2><p>{e(d['about'])}</p></div>
+  <div><h2>{e(focus_h)}</h2><ul class="svc" style="grid-template-columns:1fr">{''.join(f'<li>{e(x)}</li>' for x in d['focus'])}</ul></div>
+</div></section>
+""" + survey_common(lang) + f"""<section class="blk alt"><div class="wrap"><h2>{u['faq']}</h2>{''.join(f'<details><summary>{e(q)}</summary><p>{e(a)}</p></details>' for q, a in faq)}</div></section>
+<section class="blk"><div class="wrap"><h2>{S['ports_t']}</h2><div class="cards">{survey_cards(lang, exclude=sp['slug'])}</div></div></section>
+<section class="band"><div class="wrap"><div><h2>{S['cta']}: {e(d['name'])}</h2></div><div class="ctas"><a class="btn btn-wa" href="{link}" target="_blank" rel="noopener">WhatsApp</a><a class="btn btn-light" href="mailto:operacion@marimargroup.com">operacion@marimargroup.com</a></div></div></section>
+"""
+    return head(lang, d['title'], d['desc'], path, alt, ld) + body + foot(lang)
+
 def write(path, text):
     full = os.path.join(PUB, path.strip('/'), 'index.html')
     os.makedirs(os.path.dirname(full), exist_ok=True)
@@ -268,6 +355,12 @@ pairs.append(('/puertos/', '/en/ports/'))
 for lang in ('es', 'en'):
     write(PROT[lang]['path'], protect_page(lang))
 pairs.append((PROT['es']['path'], PROT['en']['path']))
+for lang in ('es', 'en'):
+    write(SURVEY[lang]['path'], survey_hub(lang))
+    for sp in SPORTS:
+        write(sp_url(lang, sp['slug']), survey_port(lang, sp))
+pairs.append((SURVEY['es']['path'], SURVEY['en']['path']))
+pairs += [(sp_url('es', sp['slug']), sp_url('en', sp['slug'])) for sp in SPORTS]
 pairs += [(url('es', p['slug']), url('en', p['slug'])) for p in PORTS]
 
 def alt_links(es, en):
@@ -276,4 +369,4 @@ def alt_links(es, en):
             f'    <xhtml:link rel="alternate" hreflang="x-default" href="{BASE}{es}"/>\n')
 entries = ''.join(f'  <url>\n    <loc>{BASE}{loc}</loc>\n    <lastmod>{TODAY}</lastmod>\n{alt_links(es, en)}  </url>\n' for es, en in pairs for loc in (es, en))
 open(os.path.join(PUB, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' + entries + '</urlset>\n')
-print('páginas:', 4 + 2 * len(PORTS), '| urls sitemap:', 2 * len(pairs))
+print('páginas:', 6 + 2 * len(PORTS) + 2 * len(SPORTS), '| urls sitemap:', 2 * len(pairs))
