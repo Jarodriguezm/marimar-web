@@ -402,6 +402,16 @@ html.mm-anchor input,html.mm-anchor textarea{cursor:text}
   </div>
 </section>
 
+<section id="marca" aria-label="MARIMAR C.A. — brand identity" style="background:radial-gradient(ellipse 60% 70% at 50% 45%,#141519 0%,#08090b 70%,#050506 100%);padding:clamp(28px,5vw,56px) 24px;text-align:center">
+  <div style="max-width:720px;margin:0 auto">
+    <video class="mm-logo-vid" muted playsinline preload="none" poster="../assets/video/marimar-logo-poster.jpg" width="720" height="480" aria-hidden="true" style="width:100%;height:auto;aspect-ratio:3/2;display:block;-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 55%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 55%,transparent 100%)">
+      <source src="../assets/video/marimar-logo.webm" type="video/webm">
+      <source src="../assets/video/marimar-logo.mp4" type="video/mp4">
+    </video>
+    <p style="margin:6px 0 0;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#94bce3">Puerto Sucre · Cumaná · Since 1992</p>
+  </div>
+</section>
+
 <section id="nosotros" data-screen-label="Nosotros" style="scroll-margin-top:84px;background:#ffffff;border-top:1px solid rgba(29,31,32,0.14);border-bottom:1px solid rgba(29,31,32,0.14);padding:clamp(60px,8vw,104px) 24px">
   <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(48px,6vw,72px)">
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:clamp(36px,6vw,80px);align-items:start">
@@ -989,5 +999,11 @@ class Component extends DCLogic {
 </script>
 
 
+<script>
+(function(){function go(){var v=document.querySelector('.mm-logo-vid');if(!v){return setTimeout(go,400)}
+v.muted=true;if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+var io=new IntersectionObserver(function(e){if(e[0].isIntersecting){v.preload='auto';var p=v.play();if(p&&p.catch)p.catch(function(){});io.disconnect()}},{threshold:0.5});io.observe(v)}
+if(document.readyState==='complete')go();else window.addEventListener('load',go)})();
+</script>
 </body>
 </html>
