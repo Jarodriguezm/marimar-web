@@ -39,8 +39,8 @@
 <script src="assets/js/dc-runtime.js"></script>
 </head>
 <body>
-<div id="mm-intro" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:9999;background:#050506;align-items:center;justify-content:center;transition:opacity .6s ease;cursor:pointer">
-  <video id="mm-intro-v" muted playsinline preload="auto" style="width:100%;height:100%;object-fit:contain;display:block"></video>
+<div id="mm-intro" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse 60% 60% at 50% 50%,#141519 0%,#08090b 70%,#050506 100%);align-items:center;justify-content:center;transition:opacity .6s ease;cursor:pointer">
+  <video id="mm-intro-v" muted playsinline preload="auto" style="width:min(70vw,460px);height:auto;aspect-ratio:3/2;display:block;-webkit-mask-image:radial-gradient(ellipse 58% 60% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 58% 60% at 50% 50%,#000 70%,transparent 100%)"></video>
   <button type="button" id="mm-intro-skip" style="position:absolute;right:18px;bottom:18px;background:rgba(255,255,255,.08);color:#dfe8f1;border:1px solid rgba(255,255,255,.35);padding:8px 14px;font:600 14px 'Barlow Condensed',sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer">Saltar</button>
 </div>
 <script>
@@ -49,8 +49,7 @@ try{seen=sessionStorage.getItem('mmIntro')==='1';sessionStorage.setItem('mmIntro
 var rm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var bot=/bot|crawl|spider|lighthouse|slurp|facebookexternalhit|linkedinbot|whatsapp/i.test(navigator.userAgent);
 if(seen||rm||bot||location.hash)return;
-var vert=window.innerHeight>window.innerWidth*1.15,b='assets/video/intro-'+(vert?'vertical':'h');
-if(vert)v.style.objectFit='cover';
+var b='assets/video/intro-h';
 v.innerHTML='<source src="'+b+'.webm" type="video/webm"><source src="'+b+'.mp4" type="video/mp4">';
 o.style.display='flex';document.documentElement.style.overflow='hidden';
 var done=false;function end(){if(done)return;done=true;o.style.opacity='0';document.documentElement.style.overflow='';setTimeout(function(){o.remove()},650)}
