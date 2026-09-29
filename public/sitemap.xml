@@ -29,6 +29,20 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.marimargroup.com/puertos/"/>
   </url>
   <url>
+    <loc>https://www.marimargroup.com/servicios/agente-protector/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.marimargroup.com/servicios/agente-protector/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.marimargroup.com/en/services/protecting-agent/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.marimargroup.com/servicios/agente-protector/"/>
+  </url>
+  <url>
+    <loc>https://www.marimargroup.com/en/services/protecting-agent/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.marimargroup.com/servicios/agente-protector/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.marimargroup.com/en/services/protecting-agent/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.marimargroup.com/servicios/agente-protector/"/>
+  </url>
+  <url>
     <loc>https://www.marimargroup.com/puertos/puerto-sucre/</loc>
     <lastmod>2026-09-29</lastmod>
     <xhtml:link rel="alternate" hreflang="es" href="https://www.marimargroup.com/puertos/puerto-sucre/"/>
